@@ -166,7 +166,8 @@ typedef struct
   */
 
 /** I2C Device Address 8 bit format **/
-#define LPS28DFW_I2C_ADD                 0xB9U
+#define LPS28DFW_I2C_ADD_L               0xB9U
+#define LPS28DFW_I2C_ADD_H               0xBBU
 
 /** Device Identification (Who am I) **/
 #define LPS28DFW_ID                      0xB4U
