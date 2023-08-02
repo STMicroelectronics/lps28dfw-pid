@@ -515,25 +515,31 @@ typedef struct
 } lps28dfw_id_t;
 int32_t lps28dfw_id_get(stmdev_ctx_t *ctx, lps28dfw_id_t *val);
 
+typedef enum
+{
+  LPS28DFW_SEL_BY_HW      = 0x00, /* bus mode select by HW (SPI 3W disable) */
+  LPS28DFW_INT_PIN_ON_I3C = 0x04, /* INT pin polarized as OUT with I3C */
+} lps28dfw_interface_t;
+
+typedef enum
+{
+  LPS28DFW_AUTO      = 0x00, /* bus mode select by HW (SPI 3W disable) */
+  LPS28DFW_ALWAYS_ON = 0x01, /* Only SPI: SDO / SDI separated pins */
+} lps28dfw_filter_t;
+
+typedef enum
+{
+  LPS28DFW_BUS_AVB_TIME_50us      = 0x00, /* bus available time equal to 50 us */
+  LPS28DFW_BUS_AVB_TIME_2us       = 0x01, /* bus available time equal to 2 us */
+  LPS28DFW_BUS_AVB_TIME_1ms       = 0x02, /* bus available time equal to 1 ms */
+  LPS28DFW_BUS_AVB_TIME_25ms      = 0x03, /* bus available time equal to 25 ms */
+} lps28dfw_bus_avb_time_t;
+
 typedef struct
 {
-  enum
-  {
-    LPS28DFW_SEL_BY_HW      = 0x00, /* bus mode select by HW (SPI 3W disable) */
-    LPS28DFW_INT_PIN_ON_I3C = 0x04, /* INT pin polarized as OUT with I3C */
-  } interface;
-  enum
-  {
-    LPS28DFW_AUTO      = 0x00, /* bus mode select by HW (SPI 3W disable) */
-    LPS28DFW_ALWAYS_ON = 0x01, /* Only SPI: SDO / SDI separated pins */
-  } filter;
-  enum
-  {
-    LPS28DFW_BUS_AVB_TIME_50us      = 0x00, /* bus available time equal to 50 us */
-    LPS28DFW_BUS_AVB_TIME_2us       = 0x01, /* bus available time equal to 2 us */
-    LPS28DFW_BUS_AVB_TIME_1ms       = 0x02, /* bus available time equal to 1 ms */
-    LPS28DFW_BUS_AVB_TIME_25ms      = 0x03, /* bus available time equal to 25 ms */
-  } bus_avb_time;
+  lps28dfw_interface_t interface;
+  lps28dfw_filter_t filter;
+  lps28dfw_bus_avb_time_t bus_avb_time;
 } lps28dfw_bus_mode_t;
 int32_t lps28dfw_bus_mode_set(stmdev_ctx_t *ctx, lps28dfw_bus_mode_t *val);
 int32_t lps28dfw_bus_mode_get(stmdev_ctx_t *ctx, lps28dfw_bus_mode_t *val);
@@ -582,42 +588,50 @@ typedef struct
 int32_t lps28dfw_all_sources_get(stmdev_ctx_t *ctx,
                                  lps28dfw_all_sources_t *val);
 
+typedef enum
+{
+  LPS28DFW_1260hPa = 0x00,
+  LPS28DFW_4000hPa = 0x01,
+} lps28dfw_fs_t;
+
+typedef enum
+{
+  LPS28DFW_ONE_SHOT = 0x00, /* Device in power down till software trigger */
+  LPS28DFW_1Hz      = 0x01,
+  LPS28DFW_4Hz      = 0x02,
+  LPS28DFW_10Hz     = 0x03,
+  LPS28DFW_25Hz     = 0x04,
+  LPS28DFW_50Hz     = 0x05,
+  LPS28DFW_75Hz     = 0x06,
+  LPS28DFW_100Hz    = 0x07,
+  LPS28DFW_200Hz    = 0x08,
+} lps28dfw_odr_t;
+
+typedef enum
+{
+  LPS28DFW_4_AVG   = 0,
+  LPS28DFW_8_AVG   = 1,
+  LPS28DFW_16_AVG  = 2,
+  LPS28DFW_32_AVG  = 3,
+  LPS28DFW_64_AVG  = 4,
+  LPS28DFW_128_AVG = 5,
+  LPS28DFW_256_AVG = 6,
+  LPS28DFW_512_AVG = 7,
+} lps28dfw_avg_t;
+
+typedef enum
+{
+  LPS28DFW_LPF_DISABLE   = 0,
+  LPS28DFW_LPF_ODR_DIV_4 = 1,
+  LPS28DFW_LPF_ODR_DIV_9 = 3,
+} lps28dfw_lpf_t;
+
 typedef struct
 {
-  enum
-  {
-    LPS28DFW_1260hPa = 0x00,
-    LPS28DFW_4000hPa = 0x01,
-  } fs;
-  enum
-  {
-    LPS28DFW_ONE_SHOT = 0x00, /* Device in power down till software trigger */
-    LPS28DFW_1Hz      = 0x01,
-    LPS28DFW_4Hz      = 0x02,
-    LPS28DFW_10Hz     = 0x03,
-    LPS28DFW_25Hz     = 0x04,
-    LPS28DFW_50Hz     = 0x05,
-    LPS28DFW_75Hz     = 0x06,
-    LPS28DFW_100Hz    = 0x07,
-    LPS28DFW_200Hz    = 0x08,
-  } odr;
-  enum
-  {
-    LPS28DFW_4_AVG   = 0,
-    LPS28DFW_8_AVG   = 1,
-    LPS28DFW_16_AVG  = 2,
-    LPS28DFW_32_AVG  = 3,
-    LPS28DFW_64_AVG  = 4,
-    LPS28DFW_128_AVG = 5,
-    LPS28DFW_256_AVG = 6,
-    LPS28DFW_512_AVG = 7,
-  } avg;
-  enum
-  {
-    LPS28DFW_LPF_DISABLE   = 0,
-    LPS28DFW_LPF_ODR_DIV_4 = 1,
-    LPS28DFW_LPF_ODR_DIV_9 = 3,
-  } lpf;
+  lps28dfw_fs_t fs;
+  lps28dfw_odr_t odr;
+  lps28dfw_avg_t avg;
+  lps28dfw_lpf_t lpf;
 } lps28dfw_md_t;
 int32_t lps28dfw_mode_set(stmdev_ctx_t *ctx, lps28dfw_md_t *val);
 int32_t lps28dfw_mode_get(stmdev_ctx_t *ctx, lps28dfw_md_t *val);
@@ -640,17 +654,19 @@ typedef struct
 int32_t lps28dfw_data_get(stmdev_ctx_t *ctx, lps28dfw_md_t *md,
                           lps28dfw_data_t *data);
 
+typedef enum
+{
+  LPS28DFW_BYPASS           = 0,
+  LPS28DFW_FIFO             = 1,
+  LPS28DFW_STREAM           = 2,
+  LPS28DFW_STREAM_TO_FIFO   = 7, /* Dynamic-Stream, FIFO on Trigger */
+  LPS28DFW_BYPASS_TO_STREAM = 6, /* Bypass, Dynamic-Stream on Trigger */
+  LPS28DFW_BYPASS_TO_FIFO   = 5, /* Bypass, FIFO on Trigger */
+} lps28dfw_operation_t;
+
 typedef struct
 {
-  enum
-  {
-    LPS28DFW_BYPASS           = 0,
-    LPS28DFW_FIFO             = 1,
-    LPS28DFW_STREAM           = 2,
-    LPS28DFW_STREAM_TO_FIFO   = 7, /* Dynamic-Stream, FIFO on Trigger */
-    LPS28DFW_BYPASS_TO_STREAM = 6, /* Bypass, Dynamic-Stream on Trigger */
-    LPS28DFW_BYPASS_TO_FIFO   = 5, /* Bypass, FIFO on Trigger */
-  } operation;
+  lps28dfw_operation_t operation;
   uint8_t watermark; /* (0 disable) max 128.*/
 } lps28dfw_fifo_md_t;
 int32_t lps28dfw_fifo_mode_set(stmdev_ctx_t *ctx, lps28dfw_fifo_md_t *val);
@@ -702,14 +718,16 @@ int32_t lps28dfw_int_on_threshold_mode_set(stmdev_ctx_t *ctx,
 int32_t lps28dfw_int_on_threshold_mode_get(stmdev_ctx_t *ctx,
                                            lps28dfw_int_th_md_t *val);
 
+typedef enum
+{
+  LPS28DFW_OUT_AND_INTERRUPT = 0,
+  LPS28DFW_ONLY_INTERRUPT    = 1,
+  LPS28DFW_RST_REFS          = 2,
+} lps28dfw_apply_ref_t;
+
 typedef struct
 {
-  enum
-  {
-    LPS28DFW_OUT_AND_INTERRUPT = 0,
-    LPS28DFW_ONLY_INTERRUPT    = 1,
-    LPS28DFW_RST_REFS          = 2,
-  } apply_ref;
+  lps28dfw_apply_ref_t apply_ref;
   uint8_t get_ref : 1; /* Use current pressure value as reference */
 } lps28dfw_ref_md_t;
 int32_t lps28dfw_reference_mode_set(stmdev_ctx_t *ctx,
