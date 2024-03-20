@@ -58,13 +58,26 @@ This directory contains the LPS28DFW component drivers.
 
 </div>
 
-<input type="checkbox" id="collapse-section3" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section3" aria-hidden="true">
 <label for="collapse-section3" aria-hidden="true">V1.2.0 / 09-Nov-2023</label>
 <div>
 
 ## Main changes
 
 - moved all enum outside of struct to be C++ compliant
+
+##
+
+</div>
+
+<input type="checkbox" id="collapse-section4" checked aria-hidden="true">
+<label for="collapse-section4" aria-hidden="true">V2.0.0 / 20-Mar-2024</label>
+<div>
+
+## Main changes
+
+- Fixed code style (Artistic Style Version 3.4.13)
+- Add "const" to ctx arg for all APIs
 
 ##
 
