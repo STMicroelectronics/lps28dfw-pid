@@ -51,7 +51,10 @@ int32_t __weak lps28dfw_read_reg(const stmdev_ctx_t *ctx, uint8_t reg, uint8_t *
 {
   int32_t ret;
 
-  if (ctx == NULL) return -1;
+  if (ctx == NULL)
+  {
+    return -1;
+  }
 
   ret = ctx->read_reg(ctx->handle, reg, data, len);
 
@@ -73,7 +76,10 @@ int32_t __weak lps28dfw_write_reg(const stmdev_ctx_t *ctx, uint8_t reg, uint8_t 
 {
   int32_t ret;
 
-  if (ctx == NULL) return -1;
+  if (ctx == NULL)
+  {
+    return -1;
+  }
 
   ret = ctx->write_reg(ctx->handle, reg, data, len);
 
@@ -1127,7 +1133,7 @@ int32_t lps28dfw_reference_mode_set(const stmdev_ctx_t *ctx, lps28dfw_ref_md_t *
     interrupt_cfg.reset_arp = ((uint8_t)val->apply_ref & 0x02U) >> 1;
 
     ret = lps28dfw_write_reg(ctx, LPS28DFW_INTERRUPT_CFG,
-                            (uint8_t *)&interrupt_cfg, 1);
+                             (uint8_t *)&interrupt_cfg, 1);
   }
   return ret;
 }
