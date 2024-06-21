@@ -654,6 +654,9 @@ typedef struct
 int32_t lps28dfw_data_get(const stmdev_ctx_t *ctx, lps28dfw_md_t *md,
                           lps28dfw_data_t *data);
 
+int32_t lps28dfw_pressure_raw_get(const stmdev_ctx_t *ctx, uint32_t *buff);
+int32_t lps28dfw_temperature_raw_get(const stmdev_ctx_t *ctx, int16_t *buff);
+
 typedef enum
 {
   LPS28DFW_BYPASS           = 0,
