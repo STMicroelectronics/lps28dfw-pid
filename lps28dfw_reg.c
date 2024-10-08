@@ -493,7 +493,7 @@ int32_t lps28dfw_mode_set(const stmdev_ctx_t *ctx, lps28dfw_md_t *val)
     ctrl_reg1.odr = (uint8_t)val->odr;
     ctrl_reg1.avg = (uint8_t)val->avg;
     ctrl_reg2.en_lpfp = (uint8_t)val->lpf & 0x01U;
-    ctrl_reg2.lfpf_cfg = ((uint8_t)val->lpf & 0x02U) >> 2;
+    ctrl_reg2.lfpf_cfg = ((uint8_t)val->lpf & 0x02U) >> 1;
     ctrl_reg2.fs_mode = (uint8_t)val->fs;
 
     bytecpy(&reg[0], (uint8_t *)&ctrl_reg1);
