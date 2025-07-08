@@ -107,7 +107,7 @@ This directory contains the LPS28DFW component drivers.
 
 </div>
 
-<input type="checkbox" id="collapse-section7" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section7" aria-hidden="true">
 <label for="collapse-section7" aria-hidden="true">V2.2.0 / 18-Dec-2024</label>
 <div>
 
@@ -116,6 +116,19 @@ This directory contains the LPS28DFW component drivers.
 - cosmetic change
 - Fix wrong bitshift for lpf value
 - Align driver to 7ilps28qsw_STdC which is register compatible
+
+##
+
+</div>
+
+<input type="checkbox" id="collapse-section8" checked aria-hidden="true">
+<label for="collapse-section8" aria-hidden="true">V2.3.0 / 07-Jul-2025</label>
+<div>
+
+## Main changes
+
+- Fix driver formatting options
+- Added pointer to private data in stmdev_ctx_t
 
 ##
 
