@@ -974,27 +974,33 @@ int32_t lps28dfw_fifo_stop_on_wtm_get(const stmdev_ctx_t *ctx, lps28dfw_fifo_eve
 }
 
 /**
-  * @brief  Get the number of samples stored in FIFO.[get]
+  * @brief  FIFO status.[get]
   *
   * @param  ctx   communication interface handler.(ptr)
-  * @param  md    the sensor conversion parameters.(ptr)
-  * @param  val   number of samples stored in FIFO.(ptr)
+  * @param  val   lps28dfw_fifo_status_t struct
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t lps28dfw_fifo_level_get(const stmdev_ctx_t *ctx, uint8_t *val)
+int32_t lps28dfw_fifo_status_get(const stmdev_ctx_t *ctx, lps28dfw_fifo_status_t *val)
 {
   lps28dfw_fifo_status1_t fifo_status1;
+  lps28dfw_fifo_status2_t fifo_status2;
+  uint8_t reg[2];
   int32_t ret;
 
-  ret = lps28dfw_read_reg(ctx, LPS28DFW_FIFO_STATUS1,
-                          (uint8_t *)&fifo_status1, 1);
+  ret = lps28dfw_read_reg(ctx, LPS28DFW_FIFO_STATUS1, &reg[0], 2);
   if (ret != 0)
   {
     return ret;
   }
 
-  *val = fifo_status1.fss;
+  bytecpy((uint8_t *)&fifo_status1, &reg[0]);
+  bytecpy((uint8_t *)&fifo_status2, &reg[1]);
+
+  val->fifo_level = fifo_status1.fss;
+  val->fifo_full = fifo_status2.fifo_full_ia;
+  val->fifo_ovr = fifo_status2.fifo_ovr_ia;
+  val->fifo_th = fifo_status2.fifo_wtm_ia;
 
   return ret;
 }

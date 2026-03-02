@@ -692,7 +692,14 @@ typedef enum
 int32_t lps28dfw_fifo_stop_on_wtm_set(const stmdev_ctx_t *ctx, lps28dfw_fifo_event_t val);
 int32_t lps28dfw_fifo_stop_on_wtm_get(const stmdev_ctx_t *ctx, lps28dfw_fifo_event_t *val);
 
-int32_t lps28dfw_fifo_level_get(const stmdev_ctx_t *ctx, uint8_t *val);
+typedef struct
+{
+  uint8_t fifo_level;
+  uint8_t fifo_full                    : 1;
+  uint8_t fifo_ovr                     : 1;
+  uint8_t fifo_th                      : 1;
+} lps28dfw_fifo_status_t;
+int32_t lps28dfw_fifo_status_get(const stmdev_ctx_t *ctx, lps28dfw_fifo_status_t *val);
 
 typedef struct
 {
