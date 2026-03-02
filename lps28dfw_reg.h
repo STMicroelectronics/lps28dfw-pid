@@ -591,6 +591,13 @@ typedef struct
 int32_t lps28dfw_all_sources_get(const stmdev_ctx_t *ctx,
                                  lps28dfw_all_sources_t *val);
 
+typedef struct
+{
+  uint8_t drdy_pres   :  1; /* Pressure data ready */
+  uint8_t drdy_temp   :  1; /* Temperature data ready */
+} lps28dfw_data_ready_t;
+int32_t lps28dfw_flag_data_ready_get(const stmdev_ctx_t *ctx, lps28dfw_data_ready_t *val);
+
 typedef enum
 {
   LPS28DFW_1260hPa = 0x00,
