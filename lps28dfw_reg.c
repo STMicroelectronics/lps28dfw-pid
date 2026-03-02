@@ -17,7 +17,6 @@
  */
 
 #include "lps28dfw_reg.h"
-#include <assert.h>
 
 /**
   * @defgroup    LPS28DFW
@@ -896,7 +895,11 @@ int32_t lps28dfw_fifo_watermark_set(const stmdev_ctx_t *ctx, uint8_t val)
   lps28dfw_fifo_wtm_t fifo_wtm;
   int32_t ret;
 
-  assert(val < 128);
+  if (val >= 128)
+  {
+    ret = -1;
+    goto exit;
+  }
 
   ret = lps28dfw_read_reg(ctx, LPS28DFW_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
   if (ret == 0)
@@ -905,6 +908,8 @@ int32_t lps28dfw_fifo_watermark_set(const stmdev_ctx_t *ctx, uint8_t val)
 
     ret = lps28dfw_write_reg(ctx, LPS28DFW_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
   }
+
+exit:
   return ret;
 }
 
