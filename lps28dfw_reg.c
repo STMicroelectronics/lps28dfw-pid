@@ -233,10 +233,10 @@ int32_t lps28dfw_bus_mode_get(const stmdev_ctx_t *ctx, lps28dfw_bus_mode_t *val)
 
     switch (if_ctrl.int_en_i3c << 2)
     {
-      case LPS28DFW_SEL_BY_HW:
+      case 0x00:
         val->interface = LPS28DFW_SEL_BY_HW;
         break;
-      case LPS28DFW_INT_PIN_ON_I3C:
+      case 0x04:
         val->interface = LPS28DFW_INT_PIN_ON_I3C;
         break;
       default:
@@ -246,10 +246,10 @@ int32_t lps28dfw_bus_mode_get(const stmdev_ctx_t *ctx, lps28dfw_bus_mode_t *val)
 
     switch (i3c_if_ctrl.asf_on)
     {
-      case LPS28DFW_AUTO:
+      case 0x00:
         val->filter = LPS28DFW_AUTO;
         break;
-      case LPS28DFW_ALWAYS_ON:
+      case 0x01:
         val->filter = LPS28DFW_ALWAYS_ON;
         break;
       default:
@@ -259,16 +259,16 @@ int32_t lps28dfw_bus_mode_get(const stmdev_ctx_t *ctx, lps28dfw_bus_mode_t *val)
 
     switch (i3c_if_ctrl.I3C_Bus_Avb_Sel)
     {
-      case LPS28DFW_BUS_AVB_TIME_50us:
+      case 0x00:
         val->bus_avb_time = LPS28DFW_BUS_AVB_TIME_50us;
         break;
-      case LPS28DFW_BUS_AVB_TIME_2us:
+      case 0x01:
         val->bus_avb_time = LPS28DFW_BUS_AVB_TIME_2us;
         break;
-      case LPS28DFW_BUS_AVB_TIME_1ms:
+      case 0x02:
         val->bus_avb_time = LPS28DFW_BUS_AVB_TIME_1ms;
         break;
-      case LPS28DFW_BUS_AVB_TIME_25ms:
+      case 0x03:
         val->bus_avb_time = LPS28DFW_BUS_AVB_TIME_25ms;
         break;
       default:
@@ -577,10 +577,10 @@ int32_t lps28dfw_mode_get(const stmdev_ctx_t *ctx, lps28dfw_md_t *val)
 
     switch (ctrl_reg2.fs_mode)
     {
-      case LPS28DFW_1260hPa:
+      case 0x00:
         val->fs = LPS28DFW_1260hPa;
         break;
-      case LPS28DFW_4060hPa:
+      case 0x01:
         val->fs = LPS28DFW_4060hPa;
         break;
       default:
@@ -590,31 +590,31 @@ int32_t lps28dfw_mode_get(const stmdev_ctx_t *ctx, lps28dfw_md_t *val)
 
     switch (ctrl_reg1.odr)
     {
-      case LPS28DFW_ONE_SHOT:
+      case 0x00:
         val->odr = LPS28DFW_ONE_SHOT;
         break;
-      case LPS28DFW_1Hz:
+      case 0x01:
         val->odr = LPS28DFW_1Hz;
         break;
-      case LPS28DFW_4Hz:
+      case 0x02:
         val->odr = LPS28DFW_4Hz;
         break;
-      case LPS28DFW_10Hz:
+      case 0x03:
         val->odr = LPS28DFW_10Hz;
         break;
-      case LPS28DFW_25Hz:
+      case 0x04:
         val->odr = LPS28DFW_25Hz;
         break;
-      case LPS28DFW_50Hz:
+      case 0x05:
         val->odr = LPS28DFW_50Hz;
         break;
-      case LPS28DFW_75Hz:
+      case 0x06:
         val->odr = LPS28DFW_75Hz;
         break;
-      case LPS28DFW_100Hz:
+      case 0x07:
         val->odr = LPS28DFW_100Hz;
         break;
-      case LPS28DFW_200Hz:
+      case 0x08:
         val->odr = LPS28DFW_200Hz;
         break;
       default:
@@ -624,28 +624,28 @@ int32_t lps28dfw_mode_get(const stmdev_ctx_t *ctx, lps28dfw_md_t *val)
 
     switch (ctrl_reg1.avg)
     {
-      case LPS28DFW_4_AVG:
+      case 0x00:
         val->avg = LPS28DFW_4_AVG;
         break;
-      case LPS28DFW_8_AVG:
+      case 0x01:
         val->avg = LPS28DFW_8_AVG;
         break;
-      case LPS28DFW_16_AVG:
+      case 0x02:
         val->avg = LPS28DFW_16_AVG;
         break;
-      case LPS28DFW_32_AVG:
+      case 0x03:
         val->avg = LPS28DFW_32_AVG;
         break;
-      case LPS28DFW_64_AVG:
+      case 0x04:
         val->avg = LPS28DFW_64_AVG;
         break;
-      case LPS28DFW_128_AVG:
+      case 0x05:
         val->avg = LPS28DFW_128_AVG;
         break;
-      case LPS28DFW_256_AVG:
+      case 0x06:
         val->avg = LPS28DFW_256_AVG;
         break;
-      case LPS28DFW_512_AVG:
+      case 0x07:
         val->avg = LPS28DFW_512_AVG;
         break;
       default:
@@ -655,13 +655,13 @@ int32_t lps28dfw_mode_get(const stmdev_ctx_t *ctx, lps28dfw_md_t *val)
 
     switch ((ctrl_reg2.lfpf_cfg << 2) | ctrl_reg2.en_lpfp)
     {
-      case LPS28DFW_LPF_DISABLE:
+      case 0x00:
         val->lpf = LPS28DFW_LPF_DISABLE;
         break;
-      case LPS28DFW_LPF_ODR_DIV_4:
+      case 0x01:
         val->lpf = LPS28DFW_LPF_ODR_DIV_4;
         break;
-      case LPS28DFW_LPF_ODR_DIV_9:
+      case 0x03:
         val->lpf = LPS28DFW_LPF_ODR_DIV_9;
         break;
       default:
@@ -856,22 +856,22 @@ int32_t lps28dfw_fifo_mode_get(const stmdev_ctx_t *ctx, lps28dfw_operation_t *va
 
   switch ((fifo_ctrl.trig_modes << 2) | fifo_ctrl.f_mode)
   {
-    case LPS28DFW_BYPASS:
+    case 0x00:
       *val = LPS28DFW_BYPASS;
       break;
-    case LPS28DFW_FIFO:
+    case 0x01:
       *val = LPS28DFW_FIFO;
       break;
-    case LPS28DFW_STREAM:
+    case 0x02:
       *val = LPS28DFW_STREAM;
       break;
-    case LPS28DFW_STREAM_TO_FIFO:
+    case 0x07:
       *val = LPS28DFW_STREAM_TO_FIFO;
       break;
-    case LPS28DFW_BYPASS_TO_STREAM:
+    case 0x06:
       *val = LPS28DFW_BYPASS_TO_STREAM;
       break;
-    case LPS28DFW_BYPASS_TO_FIFO:
+    case 0x05:
       *val = LPS28DFW_BYPASS_TO_FIFO;
       break;
     default:
@@ -1372,12 +1372,15 @@ int32_t lps28dfw_reference_mode_get(const stmdev_ctx_t *ctx, lps28dfw_ref_md_t *
   switch ((interrupt_cfg.reset_az << 1) |
           interrupt_cfg.autorefp)
   {
-    case LPS28DFW_OUT_AND_INTERRUPT:
+    case 0x00:
       val->apply_ref = LPS28DFW_OUT_AND_INTERRUPT;
       break;
-    case LPS28DFW_ONLY_INTERRUPT:
+
+    case 0x01:
       val->apply_ref = LPS28DFW_ONLY_INTERRUPT;
       break;
+
+    // mainly for 0x02 value
     default:
       val->apply_ref = LPS28DFW_RST_REFS;
       break;
