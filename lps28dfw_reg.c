@@ -97,7 +97,7 @@ int32_t __weak lps28dfw_write_reg(const stmdev_ctx_t *ctx, uint8_t reg, uint8_t 
   *
 */
 
-static void bytecpy(uint8_t *target, uint8_t *source)
+static void bytecpy(uint8_t *target, const uint8_t *source)
 {
   if ((target != NULL) && (source != NULL))
   {
@@ -177,7 +177,7 @@ int32_t lps28dfw_id_get(const stmdev_ctx_t *ctx, lps28dfw_id_t *val)
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t lps28dfw_bus_mode_set(const stmdev_ctx_t *ctx, lps28dfw_bus_mode_t *val)
+int32_t lps28dfw_bus_mode_set(const stmdev_ctx_t *ctx, const lps28dfw_bus_mode_t *val)
 {
   lps28dfw_i3c_if_ctrl_t i3c_if_ctrl = {0};
   lps28dfw_if_ctrl_t if_ctrl = {0};
@@ -387,7 +387,7 @@ int32_t lps28dfw_status_get(const stmdev_ctx_t *ctx, lps28dfw_stat_t *val)
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t lps28dfw_pin_conf_set(const stmdev_ctx_t *ctx, lps28dfw_pin_conf_t *val)
+int32_t lps28dfw_pin_conf_set(const stmdev_ctx_t *ctx, const lps28dfw_pin_conf_t *val)
 {
   lps28dfw_ctrl_reg3_t ctrl_reg3 = {0};
   lps28dfw_if_ctrl_t if_ctrl = {0};
@@ -521,7 +521,7 @@ int32_t lps28dfw_flag_data_ready_get(const stmdev_ctx_t *ctx, lps28dfw_data_read
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t lps28dfw_mode_set(const stmdev_ctx_t *ctx, lps28dfw_md_t *val)
+int32_t lps28dfw_mode_set(const stmdev_ctx_t *ctx, const lps28dfw_md_t *val)
 {
   lps28dfw_ctrl_reg1_t ctrl_reg1 = {0};
   lps28dfw_ctrl_reg2_t ctrl_reg2 = {0};
@@ -570,106 +570,103 @@ int32_t lps28dfw_mode_get(const stmdev_ctx_t *ctx, lps28dfw_md_t *val)
     return ret;
   }
 
-  if (ret == 0)
+  bytecpy((uint8_t *)&ctrl_reg1, &reg[0]);
+  bytecpy((uint8_t *)&ctrl_reg2, &reg[1]);
+
+  switch (ctrl_reg2.fs_mode)
   {
-    bytecpy((uint8_t *)&ctrl_reg1, &reg[0]);
-    bytecpy((uint8_t *)&ctrl_reg2, &reg[1]);
-
-    switch (ctrl_reg2.fs_mode)
-    {
-      case 0x00:
-        val->fs = LPS28DFW_1260hPa;
-        break;
-      case 0x01:
-        val->fs = LPS28DFW_4060hPa;
-        break;
-      default:
-        val->fs = LPS28DFW_1260hPa;
-        break;
-    }
-
-    switch (ctrl_reg1.odr)
-    {
-      case 0x00:
-        val->odr = LPS28DFW_ONE_SHOT;
-        break;
-      case 0x01:
-        val->odr = LPS28DFW_1Hz;
-        break;
-      case 0x02:
-        val->odr = LPS28DFW_4Hz;
-        break;
-      case 0x03:
-        val->odr = LPS28DFW_10Hz;
-        break;
-      case 0x04:
-        val->odr = LPS28DFW_25Hz;
-        break;
-      case 0x05:
-        val->odr = LPS28DFW_50Hz;
-        break;
-      case 0x06:
-        val->odr = LPS28DFW_75Hz;
-        break;
-      case 0x07:
-        val->odr = LPS28DFW_100Hz;
-        break;
-      case 0x08:
-        val->odr = LPS28DFW_200Hz;
-        break;
-      default:
-        val->odr = LPS28DFW_ONE_SHOT;
-        break;
-    }
-
-    switch (ctrl_reg1.avg)
-    {
-      case 0x00:
-        val->avg = LPS28DFW_4_AVG;
-        break;
-      case 0x01:
-        val->avg = LPS28DFW_8_AVG;
-        break;
-      case 0x02:
-        val->avg = LPS28DFW_16_AVG;
-        break;
-      case 0x03:
-        val->avg = LPS28DFW_32_AVG;
-        break;
-      case 0x04:
-        val->avg = LPS28DFW_64_AVG;
-        break;
-      case 0x05:
-        val->avg = LPS28DFW_128_AVG;
-        break;
-      case 0x06:
-        val->avg = LPS28DFW_256_AVG;
-        break;
-      case 0x07:
-        val->avg = LPS28DFW_512_AVG;
-        break;
-      default:
-        val->avg = LPS28DFW_4_AVG;
-        break;
-    }
-
-    switch ((ctrl_reg2.lfpf_cfg << 2) | ctrl_reg2.en_lpfp)
-    {
-      case 0x00:
-        val->lpf = LPS28DFW_LPF_DISABLE;
-        break;
-      case 0x01:
-        val->lpf = LPS28DFW_LPF_ODR_DIV_4;
-        break;
-      case 0x03:
-        val->lpf = LPS28DFW_LPF_ODR_DIV_9;
-        break;
-      default:
-        val->lpf = LPS28DFW_LPF_DISABLE;
-        break;
-    }
-
+    case 0x00:
+      val->fs = LPS28DFW_1260hPa;
+      break;
+    case 0x01:
+      val->fs = LPS28DFW_4060hPa;
+      break;
+    default:
+      val->fs = LPS28DFW_1260hPa;
+      break;
   }
+
+  switch (ctrl_reg1.odr)
+  {
+    case 0x00:
+      val->odr = LPS28DFW_ONE_SHOT;
+      break;
+    case 0x01:
+      val->odr = LPS28DFW_1Hz;
+      break;
+    case 0x02:
+      val->odr = LPS28DFW_4Hz;
+      break;
+    case 0x03:
+      val->odr = LPS28DFW_10Hz;
+      break;
+    case 0x04:
+      val->odr = LPS28DFW_25Hz;
+      break;
+    case 0x05:
+      val->odr = LPS28DFW_50Hz;
+      break;
+    case 0x06:
+      val->odr = LPS28DFW_75Hz;
+      break;
+    case 0x07:
+      val->odr = LPS28DFW_100Hz;
+      break;
+    case 0x08:
+      val->odr = LPS28DFW_200Hz;
+      break;
+    default:
+      val->odr = LPS28DFW_ONE_SHOT;
+      break;
+  }
+
+  switch (ctrl_reg1.avg)
+  {
+    case 0x00:
+      val->avg = LPS28DFW_4_AVG;
+      break;
+    case 0x01:
+      val->avg = LPS28DFW_8_AVG;
+      break;
+    case 0x02:
+      val->avg = LPS28DFW_16_AVG;
+      break;
+    case 0x03:
+      val->avg = LPS28DFW_32_AVG;
+      break;
+    case 0x04:
+      val->avg = LPS28DFW_64_AVG;
+      break;
+    case 0x05:
+      val->avg = LPS28DFW_128_AVG;
+      break;
+    case 0x06:
+      val->avg = LPS28DFW_256_AVG;
+      break;
+    case 0x07:
+      val->avg = LPS28DFW_512_AVG;
+      break;
+    default:
+      val->avg = LPS28DFW_4_AVG;
+      break;
+  }
+
+  switch ((ctrl_reg2.lfpf_cfg << 1) | ctrl_reg2.en_lpfp)
+  {
+    case 0x00:
+      val->lpf = LPS28DFW_LPF_DISABLE;
+      break;
+    case 0x01:
+      val->lpf = LPS28DFW_LPF_ODR_DIV_4;
+      break;
+    case 0x03:
+      val->lpf = LPS28DFW_LPF_ODR_DIV_9;
+      break;
+    default:
+      val->lpf = LPS28DFW_LPF_DISABLE;
+      break;
+  }
+
   return ret;
 }
 
@@ -681,7 +678,7 @@ int32_t lps28dfw_mode_get(const stmdev_ctx_t *ctx, lps28dfw_md_t *val)
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t lps28dfw_trigger_sw(const stmdev_ctx_t *ctx, lps28dfw_md_t *md)
+int32_t lps28dfw_trigger_sw(const stmdev_ctx_t *ctx, const lps28dfw_md_t *md)
 {
   lps28dfw_ctrl_reg2_t ctrl_reg2 = {0};
   int32_t ret = 0;
@@ -707,7 +704,7 @@ int32_t lps28dfw_trigger_sw(const stmdev_ctx_t *ctx, lps28dfw_md_t *md)
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t lps28dfw_data_get(const stmdev_ctx_t *ctx, lps28dfw_md_t *md,
+int32_t lps28dfw_data_get(const stmdev_ctx_t *ctx, const lps28dfw_md_t *md,
                           lps28dfw_data_t *data)
 {
   uint8_t buff[5] = {0};
@@ -893,9 +890,9 @@ int32_t lps28dfw_fifo_mode_get(const stmdev_ctx_t *ctx, lps28dfw_operation_t *va
 int32_t lps28dfw_fifo_watermark_set(const stmdev_ctx_t *ctx, uint8_t val)
 {
   lps28dfw_fifo_wtm_t fifo_wtm = {0};
-  int32_t ret = {0};
+  int32_t ret = 0;
 
-  if (val >= 128)
+  if (val >= 128u)
   {
     ret = -1;
     goto exit;
@@ -904,7 +901,7 @@ int32_t lps28dfw_fifo_watermark_set(const stmdev_ctx_t *ctx, uint8_t val)
   ret = lps28dfw_read_reg(ctx, LPS28DFW_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
   if (ret == 0)
   {
-    fifo_wtm.wtm = val & 0x7F;
+    fifo_wtm.wtm = (uint8_t)(val & 0x7Fu);
 
     ret = lps28dfw_write_reg(ctx, LPS28DFW_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
   }
@@ -950,7 +947,7 @@ int32_t lps28dfw_fifo_stop_on_wtm_set(const stmdev_ctx_t *ctx, lps28dfw_fifo_eve
   ret = lps28dfw_read_reg(ctx, LPS28DFW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
   if (ret == 0)
   {
-    fifo_ctrl.stop_on_wtm = (val == LPS28DFW_FIFO_EV_WTM) ? 1 : 0;
+    fifo_ctrl.stop_on_wtm = (val == LPS28DFW_FIFO_EV_WTM) ? 1u : 0u;
 
     ret = lps28dfw_write_reg(ctx, LPS28DFW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
   }
@@ -973,7 +970,7 @@ int32_t lps28dfw_fifo_stop_on_wtm_get(const stmdev_ctx_t *ctx, lps28dfw_fifo_eve
   ret = lps28dfw_read_reg(ctx, LPS28DFW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
   if (ret == 0)
   {
-    *val = (fifo_ctrl.stop_on_wtm == 1) ? LPS28DFW_FIFO_EV_WTM : LPS28DFW_FIFO_EV_FULL;
+    *val = (fifo_ctrl.stop_on_wtm == 1u) ? LPS28DFW_FIFO_EV_WTM : LPS28DFW_FIFO_EV_FULL;
   }
   return ret;
 }
@@ -1022,7 +1019,7 @@ int32_t lps28dfw_fifo_status_get(const stmdev_ctx_t *ctx, lps28dfw_fifo_status_t
   *
   */
 int32_t lps28dfw_fifo_data_get(const stmdev_ctx_t *ctx, uint8_t samp,
-                               lps28dfw_md_t *md, lps28dfw_fifo_data_t *data)
+                               const lps28dfw_md_t *md, lps28dfw_fifo_data_t *data)
 {
   uint8_t fifo_data[3] = {0};
   uint8_t i = {0};
@@ -1080,7 +1077,7 @@ int32_t lps28dfw_fifo_data_get(const stmdev_ctx_t *ctx, uint8_t samp,
   *
   */
 int32_t lps28dfw_interrupt_mode_set(const stmdev_ctx_t *ctx,
-                                    lps28dfw_int_mode_t *val)
+                                    const lps28dfw_int_mode_t *val)
 {
   lps28dfw_interrupt_cfg_t interrupt_cfg = {0};
   lps28dfw_ctrl_reg3_t ctrl_reg3 = {0};
@@ -1164,7 +1161,7 @@ int32_t lps28dfw_interrupt_mode_get(const stmdev_ctx_t *ctx,
   *
   */
 int32_t lps28dfw_pin_int_route_set(const stmdev_ctx_t *ctx,
-                                   lps28dfw_pin_int_route_t *val)
+                                   const lps28dfw_pin_int_route_t *val)
 {
   lps28dfw_ctrl_reg4_t ctrl_reg4 = {0};
   int32_t ret = {0};
@@ -1242,7 +1239,7 @@ int32_t lps28dfw_pin_int_route_get(const stmdev_ctx_t *ctx,
   *
   */
 int32_t lps28dfw_int_on_threshold_mode_set(const stmdev_ctx_t *ctx,
-                                           lps28dfw_int_th_md_t *val)
+                                           const lps28dfw_int_th_md_t *val)
 {
   lps28dfw_interrupt_cfg_t interrupt_cfg = {0};
   lps28dfw_ths_p_l_t ths_p_l = {0};
@@ -1327,7 +1324,7 @@ int32_t lps28dfw_int_on_threshold_mode_get(const stmdev_ctx_t *ctx,
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t lps28dfw_reference_mode_set(const stmdev_ctx_t *ctx, lps28dfw_ref_md_t *val)
+int32_t lps28dfw_reference_mode_set(const stmdev_ctx_t *ctx, const lps28dfw_ref_md_t *val)
 {
   lps28dfw_interrupt_cfg_t interrupt_cfg = {0};
   int32_t ret = {0};
