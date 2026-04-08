@@ -535,11 +535,11 @@ int32_t lps28dfw_mode_set(const stmdev_ctx_t *ctx, const lps28dfw_md_t *val)
     bytecpy((uint8_t *)&ctrl_reg1, &reg[0]);
     bytecpy((uint8_t *)&ctrl_reg2, &reg[1]);
 
-    ctrl_reg1.odr = (uint8_t)val->odr;
-    ctrl_reg1.avg = (uint8_t)val->avg;
+    ctrl_reg1.odr = (uint8_t)val->odr & 0x0FU;
+    ctrl_reg1.avg = (uint8_t)val->avg & 0x07U;
     ctrl_reg2.en_lpfp = (uint8_t)val->lpf & 0x01U;
     ctrl_reg2.lfpf_cfg = ((uint8_t)val->lpf & 0x02U) >> 1;
-    ctrl_reg2.fs_mode = (uint8_t)val->fs;
+    ctrl_reg2.fs_mode = (uint8_t)val->fs & 0x01U;
 
     bytecpy(&reg[0], (uint8_t *)&ctrl_reg1);
     bytecpy(&reg[1], (uint8_t *)&ctrl_reg2);
@@ -736,8 +736,7 @@ int32_t lps28dfw_data_get(const stmdev_ctx_t *ctx, const lps28dfw_md_t *md,
   }
 
   /* temperature conversion */
-  data->heat.raw = (int16_t)buff[4];
-  data->heat.raw = (data->heat.raw * 256) + (int16_t) buff[3];
+  data->heat.raw = (int16_t)(buff[3] | ((uint16_t)buff[4] << 8));
   data->heat.deg_c = lps28dfw_from_lsb_to_celsius(data->heat.raw);
 
   return ret;
@@ -789,8 +788,7 @@ int32_t lps28dfw_temperature_raw_get(const stmdev_ctx_t *ctx, int16_t *buff)
     return ret;
   }
 
-  *buff = (int16_t)reg[1];
-  *buff = (*buff * 256) + (int16_t)reg[0];
+  *buff = (int16_t)(reg[0] | ((uint16_t)reg[1] << 8));
 
   return ret;
 }
@@ -1256,7 +1254,7 @@ int32_t lps28dfw_int_on_threshold_mode_set(const stmdev_ctx_t *ctx,
 
     interrupt_cfg.phe = val->over_th;
     interrupt_cfg.ple = val->under_th;
-    ths_p_h.ths = (uint8_t)(val->threshold / 256U);
+    ths_p_h.ths = (uint8_t)(val->threshold / 256U) & 0x7FU;
     ths_p_l.ths = (uint8_t)(val->threshold - (ths_p_h.ths * 256U));
 
     bytecpy(&reg[0], (uint8_t *)&interrupt_cfg);
@@ -1297,8 +1295,8 @@ int32_t lps28dfw_int_on_threshold_mode_get(const stmdev_ctx_t *ctx,
 
   val->over_th = interrupt_cfg.phe;
   val->under_th = interrupt_cfg.ple;
-  val->threshold = ths_p_h.ths;
-  val->threshold = (val->threshold * 256U)  + ths_p_l.ths;
+  val->threshold = (uint16_t)(ths_p_l.ths
+                              | ((uint16_t)ths_p_h.ths << 8));
 
   return ret;
 }
@@ -1406,8 +1404,7 @@ int32_t lps28dfw_refp_get(const stmdev_ctx_t *ctx, int16_t *val)
     return ret;
   }
 
-  *val = (int16_t)reg[1];
-  *val = *val * 256 + (int16_t)reg[0];
+  *val = (int16_t)(reg[0] | ((uint16_t)reg[1] << 8));
 
   return ret;
 }
@@ -1452,8 +1449,7 @@ int32_t lps28dfw_opc_get(const stmdev_ctx_t *ctx, int16_t *val)
     return ret;
   }
 
-  *val = (int16_t)reg[1];
-  *val = *val * 256 + (int16_t)reg[0];
+  *val = (int16_t)(reg[0] | ((uint16_t)reg[1] << 8));
 
   return ret;
 }
